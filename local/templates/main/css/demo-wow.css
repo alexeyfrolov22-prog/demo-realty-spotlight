@@ -70,7 +70,7 @@
 
 .demo-wow-spot__logo {
 	display: block;
-	width: min(280px, 38vw);
+	width: min(210px, 30vw);
 	height: auto;
 	margin: 0 auto;
 	filter: drop-shadow(0 12px 44px rgba(0, 0, 0, .7));

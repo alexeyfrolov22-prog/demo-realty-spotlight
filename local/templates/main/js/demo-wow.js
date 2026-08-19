@@ -6,7 +6,8 @@
 (function () {
 	'use strict';
 
-	var LOGO = '/local/templates/main/images/header/logo-white.svg';
+	/* путь относительный: сборка может лежать не в корне домена */
+	var LOGO = 'local/templates/main/images/header/mark-intro.svg';
 	var HOLD_MS = 5000;
 
 	var mq = window.matchMedia ? window.matchMedia.bind(window) : null;
@@ -147,23 +148,13 @@
 	/* =========================================================
 	   Кнопка повтора — чтобы показывать эффект заказчику
 	   ========================================================= */
-	function addReplay() {
-		var btn = document.createElement('button');
-		btn.type = 'button';
-		btn.className = 'demo-wow-replay';
-		btn.textContent = 'WOW ↻';
-		btn.addEventListener('click', function () {
-			btn.blur();
-			runSpotlight();
-		});
-		document.body.appendChild(btn);
-	}
+	/* Отладочная кнопка повтора заставки в публичной сборке не нужна. */
+
 
 	/* =========================================================
 	   Старт
 	   ========================================================= */
 	function boot() {
-		addReplay();
 		if (REDUCED) return;               // при «меньше движения» интро не показываем
 		runSpotlight();
 	}
