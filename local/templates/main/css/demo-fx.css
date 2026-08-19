@@ -1,0 +1,61 @@
+/* ============================================================
+   DEMO FX — набор «оживляющих» эффектов
+   1) появление блоков при скролле   4) параллакс фото и слоёв
+   2) счётчики цифр                  5) раскрытие заголовка по строкам
+   3) магнитные кнопки               6) кастомный курсор
+   Анимации идут через Web Animations API и JS, поэтому штатные
+   CSS-transition кнопок и карточек не перетираются.
+   ============================================================ */
+
+/* ---------- 4. Параллакс ---------- */
+
+.home-page__hero { overflow: hidden; }
+
+/* ---------- 5. Раскрытие заголовка по строкам ---------- */
+
+.demo-fx-line {
+	display: block;
+	/* запас снизу, иначе overflow срезает нижние выносные элементы букв */
+	padding-bottom: .12em;
+	margin-bottom: -.12em;
+	overflow: hidden;
+}
+
+.demo-fx-line-in { display: block; }
+
+/* ---------- 6. Кастомный курсор ---------- */
+
+html.demo-fx-cursor,
+html.demo-fx-cursor a,
+html.demo-fx-cursor button { cursor: none; }
+
+/* в полях ввода возвращаем системную каретку */
+html.demo-fx-cursor input,
+html.demo-fx-cursor textarea,
+html.demo-fx-cursor select { cursor: auto; }
+
+.demo-fx-cur {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 18px;
+	height: 18px;
+	margin: -9px 0 0 -9px;
+	z-index: 100001;
+	pointer-events: none;
+	border-radius: 50%;
+	background: #fff;
+	/* difference — точка остаётся читаемой и на светлом, и на тёмном */
+	mix-blend-mode: difference;
+	will-change: transform;
+	transition: opacity .22s ease;
+}
+
+.demo-fx-cur.is-hidden { opacity: 0; }
+
+/* ---------- Системная настройка «меньше движения» ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+	.home-page__hero { overflow: visible; }
+	.demo-fx-line { overflow: visible; }
+}

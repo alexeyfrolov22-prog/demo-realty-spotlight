@@ -1,0 +1,154 @@
+/* ============================================================
+   DEMO WOW — затемнение с «фонариком» на clip-path
+   Подключается последним, поверх штатных стилей шаблона.
+   ============================================================ */
+
+/* ---------- Затемнение с «дыркой» под курсором ---------- */
+
+.demo-wow-spot {
+	position: fixed;
+	inset: 0;
+	z-index: 99999;
+	pointer-events: none;
+	--wow-x: 50vw;
+	--wow-y: 50vh;
+	--wow-r: 0px;
+}
+
+.demo-wow-spot__veil {
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(125% 125% at 50% 38%, #06152e 0%, #020814 72%);
+	transition: opacity .55s ease;
+	will-change: clip-path, opacity;
+}
+
+/* мягкое брендовое свечение по краю «луча» */
+.demo-wow-spot__glow {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 1px;
+	height: 1px;
+	transform: translate(var(--wow-x), var(--wow-y));
+	will-change: transform;
+	transition: opacity .55s ease;
+}
+
+.demo-wow-spot__glow::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: calc(var(--wow-r) * 2.9);
+	height: calc(var(--wow-r) * 2.9);
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	background: radial-gradient(circle,
+		rgba(99, 181, 229, .34) 0%,
+		rgba(90, 135, 218, .17) 44%,
+		rgba(90, 135, 218, 0) 70%);
+	mix-blend-mode: screen;
+}
+
+.demo-wow-spot__brand {
+	position: absolute;
+	left: 0;
+	top: 0;
+	/* едет за тем же сглаженным центром, что и дырка в затемнении */
+	transform: translate(var(--wow-x), var(--wow-y)) translate(-50%, -50%);
+	text-align: center;
+	transition: opacity .5s ease;
+	will-change: transform;
+}
+
+/* отдельный слой — чтобы финальный «отъезд» не мешал слежению за курсором */
+.demo-wow-spot__brand-in {
+	position: relative;
+	transition: transform .5s ease;
+}
+
+.demo-wow-spot__logo {
+	display: block;
+	width: min(280px, 38vw);
+	height: auto;
+	margin: 0 auto;
+	filter: drop-shadow(0 12px 44px rgba(0, 0, 0, .7));
+	animation: demo-wow-logo-in 1.05s cubic-bezier(.16, .84, .32, 1) both;
+}
+
+.demo-wow-spot__hint {
+	/* вне потока — чтобы на центре кружка оказался сам логотип, а не блок с подписью */
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	transform: translateX(-50%);
+	margin: 24px 0 0;
+	white-space: nowrap;
+	font-family: "Inter", "Open Sans", sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: .16em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, .7);
+	animation: demo-wow-pulse 2.3s ease-in-out infinite;
+	transition: opacity .4s ease;
+}
+
+.demo-wow-spot__hint.is-gone { opacity: 0; }
+
+@keyframes demo-wow-logo-in {
+	from { opacity: 0; transform: translateY(16px) scale(.94); }
+	to   { opacity: 1; transform: none; }
+}
+
+@keyframes demo-wow-pulse {
+	0%, 100% { opacity: .38; }
+	50%      { opacity: .95; }
+}
+
+/* пока идёт интро — прячем баннер и кнопку «наверх», блокируем скролл */
+html.demo-wow-lock { overflow: hidden; }
+
+html.demo-wow-lock .cookie-banner,
+html.demo-wow-lock .scroll-to-top {
+	opacity: 0 !important;
+	transition: opacity .45s ease;
+	pointer-events: none;
+}
+
+/* ---------- Кнопка повтора (для показа заказчику) ---------- */
+
+.demo-wow-replay {
+	position: fixed;
+	left: 18px;
+	bottom: 18px;
+	z-index: 99997;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 16px;
+	border: 1px solid rgba(255, 255, 255, .28);
+	border-radius: 999px;
+	background: rgba(10, 20, 40, .6);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	color: #fff;
+	font-family: "Inter", "Open Sans", sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	cursor: pointer;
+	opacity: .5;
+	transition: opacity .25s ease, transform .25s ease;
+}
+
+.demo-wow-replay:hover { opacity: 1; transform: translateY(-2px); }
+
+/* ---------- Уважаем системную настройку «меньше движения» ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+	.demo-wow-spot__logo,
+	.demo-wow-spot__hint { animation: none; }
+}
